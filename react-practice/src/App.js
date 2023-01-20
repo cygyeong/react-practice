@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 const onCapture = () =>{
 	console.log('onCapture')
 	html2canvas(document.getElementById('vid')).then(canvas=>{
+    document.body.appendChild(canvas)
 		onSaveAs(canvas.toDataURL('image/png'), 'image-download/png')
 	})
 }
