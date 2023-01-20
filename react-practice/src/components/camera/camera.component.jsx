@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 
+import html2canvas from 'html2canvas'
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
@@ -20,6 +23,25 @@ const useStyles = makeStyles((theme) => ({
     display: "none"
   }
 }));
+
+
+const onCapture = () =>{
+	console.log('onCapture')
+	html2canvas(document.getElementById('vid')).then(canvas=>{
+		onSaveAs(canvas.toDataURL('image/png'), 'image-download/png')
+	})
+}
+
+const onSaveAs = (uri, filename)=> {
+	console.log('onSave')
+	let link = document.createElement('a')
+	document.body.appendChild(link)
+	link.href = uri
+	link.download = filename
+	link.click()
+	document.body.removeChild(link)
+}
+
 
 function App() {
   const classes = useStyles();
@@ -88,6 +110,7 @@ function App() {
           <br />
           <button onClick={capOff}>Turn Capture Off</button>
           <button onClick={camON}>Turn Capture ON</button>
+					<button onClick={onCapture}>사진찍기</button>
         </Grid>
       </Grid>
     </div>
