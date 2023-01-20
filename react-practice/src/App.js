@@ -56,7 +56,7 @@ function App() {
         video: true,
         // audio: true
       };
-      navigator.getUserMedia(
+      navigator.mediaDevices.getUserMedia(
         options,
         function (stream) {
           vid.srcObject = stream;
