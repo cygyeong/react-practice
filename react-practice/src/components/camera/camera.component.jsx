@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 
-import OnHtmlToPng from './components/capture/capture.component'
-
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
@@ -33,7 +31,7 @@ function App() {
     if (navigator.mediaDevices.getUserMedia !== null) {
       var options = {
         video: true,
-        // audio: true
+        audio: true
       };
       navigator.getUserMedia(
         options,
@@ -65,7 +63,7 @@ function App() {
     if (navigator.mediaDevices.getUserMedia !== null) {
       var options = {
         video: true,
-        // audio: true
+        audio: true
       };
       navigator.getUserMedia(
         options,
@@ -92,10 +90,7 @@ function App() {
           <button onClick={camON}>Turn Capture ON</button>
         </Grid>
       </Grid>
-      <OnHtmlToPng/>
     </div>
   );
 }
 export default App;
-
-
