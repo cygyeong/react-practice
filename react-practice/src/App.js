@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 
 import html2canvas from 'html2canvas'
+import Cropper from 'react-cropper';
+// import Example from "./components/example/example.component";
+import 'cropperjs/dist/cropper.css';
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,23 +30,18 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const onCapture = () =>{
-	console.log('onCapture')
-	html2canvas(document.getElementById('vid')).then(canvas=>{
-    document.body.appendChild(canvas)
-		onSaveAs(canvas.toDataURL('image/png'), 'image-download/png')
-	})
-}
 
-const onSaveAs = (uri, filename)=> {
-	console.log('onSave')
-	let link = document.createElement('a')
-	document.body.appendChild(link)
-	link.href = uri
-	link.download = filename
-	link.click()
-	document.body.removeChild(link)
-}
+// 캡쳐 이미지 로컬 저장 함수 
+// const onSaveAs = (uri, filename)=> {  
+// 	console.log('onSave')
+// 	let link = document.createElement('a')
+// 	document.body.appendChild(link)
+// 	link.href = uri
+// 	link.download = filename
+// 	link.click()
+// 	document.body.removeChild(link)
+// }
+
 
 
 function App() {
@@ -59,7 +59,7 @@ function App() {
       navigator.mediaDevices.getUserMedia(
         options,
         function (stream) {
-          vid.srcObject = stream;
+          vid.srcObject = stream; 
           localstream = stream;
           vid.play();
           console.log(stream, "streaming");
@@ -103,6 +103,29 @@ function App() {
     }
   };
 
+  const cropperRef = useRef(null);
+  // 유저가 첨부한 이미지
+  const [inputImage, setInputImage] = useState(null);
+  // 유저가 선택한 영역만큼 크롭된 이미지
+  const [croppedImage, setCroppedImage] = useState(null);
+
+  const onCapture = () =>{
+    console.log('onCapture')
+    html2canvas(document.getElementById('vid'))
+      .then(canvas=>{
+      document.body.appendChild(canvas) // 화면에 띄우기
+      // onSaveAs(canvas.toDataURL('image/png'), 'image-download/png')
+      setInputImage(canvas.toDataURL('image/png'))
+    })
+  }
+
+
+  const onCrop = () => {
+    const imageElement = cropperRef?.current;
+    const cropper = imageElement?.cropper;
+    setCroppedImage(cropper.getCroppedCanvas().toDataURL());
+  };
+
   return (
     <div className={classes.root}>
       <Grid container>
@@ -114,10 +137,10 @@ function App() {
           <button onClick={onCapture}>사진찍기</button>
         </Grid>
       </Grid>
+          <Cropper src={inputImage} crop={onCrop} ref={cropperRef} />
+          <img src={croppedImage} />
       {/* <OnHtmlToPng/> */}
     </div>
   );
 }
 export default App;
-
-
