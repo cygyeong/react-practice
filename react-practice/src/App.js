@@ -4,6 +4,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import html2canvas from 'html2canvas'
 import Cropper from 'react-cropper';
+import CanvasDraw from "react-canvas-draw";
+
+
 // import Example from "./components/example/example.component";
 import 'cropperjs/dist/cropper.css';
 
@@ -122,14 +125,27 @@ function App() {
     link.click()
     document.body.removeChild(link)
   }
-
+  
+  // const canvasRef = useRef(null)
   // 캡쳐이미지가 리사이즈 될때 실행
   useEffect(()=>{ 
     if (croppedImage){
       console.log(croppedImage)
       // onSaveAs(croppedImage, 'image-download/png')
+      // const ctx = canvasRef.current.getContext("2d")
+      // ctx.clearRect(0, 0, 500, 500)
+
+      // const image = new Image();
+      // image.src = croppedImage
+
+      // image.onload = function() {
+      //   ctx.drawImage(image, 0, 0);
+      // };
     }
   }, [croppedImage])
+
+
+
 
   return (
     <div className={classes.root}>
@@ -143,8 +159,21 @@ function App() {
         </Grid>
       </Grid>
           <Cropper src={inputImage} crop={onCrop} ref={cropperRef} />
-          <img src={croppedImage} />
+          {/* <img src={croppedImage} /> */}
+          {/* <canvas
+          ref={canvasRef}
+          width={500}
+          hegith={500}
+          /> */}
+          {/* <button onClick={}>지우기</button> */}
       {/* <OnHtmlToPng/> */}
+      <CanvasDraw  
+        imgSrc={croppedImage}
+        brushColor={'white'}
+        hideGridX={true}
+        hideGridY={true}
+        hideInterface={true}
+      />
     </div>
   );
 }
