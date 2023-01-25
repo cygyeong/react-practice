@@ -30,20 +30,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-
-// 캡쳐 이미지 로컬 저장 함수 
-// const onSaveAs = (uri, filename)=> {  
-// 	console.log('onSave')
-// 	let link = document.createElement('a')
-// 	document.body.appendChild(link)
-// 	link.href = uri
-// 	link.download = filename
-// 	link.click()
-// 	document.body.removeChild(link)
-// }
-
-
-
 function App() {
   const classes = useStyles();
 
@@ -119,12 +105,31 @@ function App() {
     })
   }
 
-
+  // 캡쳐이미지 리사이즈
   const onCrop = () => {
     const imageElement = cropperRef?.current;
     const cropper = imageElement?.cropper;
     setCroppedImage(cropper.getCroppedCanvas().toDataURL());
   };
+
+  // 캡쳐 이미지 로컬 저장 함수 
+  const onSaveAs = (uri, filename)=> {  
+    console.log('onSave')
+    let link = document.createElement('a')
+    document.body.appendChild(link)
+    link.href = uri
+    link.download = filename
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  // 캡쳐이미지가 리사이즈 될때 실행
+  useEffect(()=>{ 
+    if (croppedImage){
+      console.log(croppedImage)
+      // onSaveAs(croppedImage, 'image-download/png')
+    }
+  }, [croppedImage])
 
   return (
     <div className={classes.root}>
