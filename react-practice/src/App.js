@@ -1,10 +1,18 @@
 import React, { useEffect, useState, useRef} from "react";
+import {Routes, Route} from 'react-router-dom'
+
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 
 import html2canvas from 'html2canvas'
 import Cropper from 'react-cropper';
 import CanvasDraw from "react-canvas-draw";
+
+import TreeShakingApp from './routes/DDtest/drag-drop-test.component'
+
+import { flushSync } from "react-dom";
+
+import Moveable from "react-moveable";
 
 
 // import Example from "./components/example/example.component";
@@ -94,9 +102,13 @@ function App() {
 
   const cropperRef = useRef(null);
   // 유저가 첨부한 이미지
-  const [inputImage, setInputImage] = useState(null);
+  const [inputImage, setInputImage] = useState('null');
   // 유저가 선택한 영역만큼 크롭된 이미지
   const [croppedImage, setCroppedImage] = useState(null);
+
+  const [drawWidth, setDrawWidth] = useState(400)
+  const [drawHeight, setDrawHeight] = useState(400)
+
 
   const onCapture = () =>{
     console.log('onCapture')
@@ -126,7 +138,7 @@ function App() {
     document.body.removeChild(link)
   }
   
-  // const canvasRef = useRef(null)
+  const canvasRef = useRef(null)
   // 캡쳐이미지가 리사이즈 될때 실행
   useEffect(()=>{ 
     if (croppedImage){
@@ -135,8 +147,12 @@ function App() {
       // const ctx = canvasRef.current.getContext("2d")
       // ctx.clearRect(0, 0, 500, 500)
 
-      // const image = new Image();
-      // image.src = croppedImage
+      const image = new Image();
+      image.src = croppedImage
+      console.log(image.width)
+
+      setDrawWidth(image.width)
+      setDrawHeight(image.Heigth)
 
       // image.onload = function() {
       //   ctx.drawImage(image, 0, 0);
@@ -145,13 +161,15 @@ function App() {
   }, [croppedImage])
 
 
-
-
   return (
+  
     <div className={classes.root}>
+      <Routes>
+        <Route path='/dd' element={<TreeShakingApp/>} />
+      </Routes>
       <Grid container>
         <Grid item xs={12}>
-          <video id="vid" height="120" width="160" autoPlay></video>
+          <video id="vid" height="500" width="500" autoPlay></video>
           <br />
           <button onClick={capOff}>Turn Capture Off</button>
           <button onClick={camON}>Turn Capture ON</button>
@@ -159,7 +177,7 @@ function App() {
         </Grid>
       </Grid>
           <Cropper src={inputImage} crop={onCrop} ref={cropperRef} />
-          {/* <img src={croppedImage} /> */}
+          <img src={croppedImage} />
           {/* <canvas
           ref={canvasRef}
           width={500}
@@ -173,7 +191,25 @@ function App() {
         hideGridX={true}
         hideGridY={true}
         hideInterface={true}
+        ref={canvasRef}
+        canvasWidth={drawWidth}
+        canvasHeight={drawHeight}
       />
+
+    <button
+        onClick={() => {
+          canvasRef.current.undo();
+        }}
+      >
+        UNDO
+      </button>
+      <button
+        onClick={() => {
+          canvasRef.current.clear();
+        }}
+      >
+        CLEAR
+      </button>
     </div>
   );
 }
